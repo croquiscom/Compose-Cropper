@@ -2,6 +2,7 @@ package com.smarttoolfactory.cropper
 
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.runtime.*
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.draw.clipToBounds
@@ -40,6 +41,7 @@ import kotlinx.coroutines.launch
  * @param onGestureEnd callback to notify that gesture finished return current
  * [CropData]  of this modifier
  */
+@OptIn(ExperimentalComposeUiApi::class)
 fun Modifier.crop(
     vararg keys: Any?,
     cropState: CropState,

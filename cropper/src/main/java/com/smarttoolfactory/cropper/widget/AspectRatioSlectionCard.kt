@@ -2,8 +2,8 @@ package com.smarttoolfactory.cropper.widget
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -21,7 +21,7 @@ import com.smarttoolfactory.cropper.model.CropAspectRatio
 @Composable
 fun AspectRatioSelectionCard(
     modifier: Modifier = Modifier,
-    contentColor: Color = MaterialTheme.colorScheme.surface,
+    contentColor: Color = MaterialTheme.colors.surface,
     color: Color,
     cropAspectRatio: CropAspectRatio,
     onClick: ((List<Int>) -> Unit)? = null

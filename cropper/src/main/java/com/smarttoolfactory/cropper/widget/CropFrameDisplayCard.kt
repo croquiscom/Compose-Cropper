@@ -4,13 +4,13 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.Image
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -37,10 +37,10 @@ fun CropFrameDisplayCard(
     modifier: Modifier = Modifier,
     editable: Boolean,
     scale: Float,
-    contentColor: Color = MaterialTheme.colorScheme.surface,
+    contentColor: Color = MaterialTheme.colors.surface,
     outlineColor: Color,
-    editButtonBackgroundColor: Color = MaterialTheme.colorScheme.tertiary,
-    editButtonContentColor: Color = MaterialTheme.colorScheme.onTertiary,
+    editButtonBackgroundColor: Color = MaterialTheme.colors.primary,
+    editButtonContentColor: Color = MaterialTheme.colors.primary,
     fontSize: TextUnit = 12.sp,
     title: String,
     cropOutline: CropOutline,
