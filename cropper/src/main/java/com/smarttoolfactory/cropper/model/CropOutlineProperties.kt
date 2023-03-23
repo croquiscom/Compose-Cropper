@@ -5,11 +5,13 @@ import androidx.compose.ui.geometry.Offset
 
 @Immutable
 data class CornerRadiusProperties(
-    val topStartPercent: Int = 20,
-    val topEndPercent: Int = 20,
-    val bottomStartPercent: Int = 20,
-    val bottomEndPercent: Int = 20
-)
+    val topStart: Float = 20f,
+    val topEnd: Float = 20f,
+    val bottomStart: Float = 20f,
+    val bottomEnd: Float = 20f
+) {
+    constructor(radius: Float) : this(topStart = radius, topEnd = radius, bottomStart = radius, bottomEnd = radius)
+}
 
 @Immutable
 data class PolygonProperties(

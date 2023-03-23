@@ -34,8 +34,10 @@ import com.smarttoolfactory.composecropper.preferences.CropStyleSelectionMenu
 import com.smarttoolfactory.composecropper.preferences.PropertySelectionSheet
 import com.smarttoolfactory.composecropper.ui.theme.ComposeCropperTheme
 import com.smarttoolfactory.cropper.ImageCropper
+import com.smarttoolfactory.cropper.model.CornerRadiusProperties
 import com.smarttoolfactory.cropper.model.OutlineType
 import com.smarttoolfactory.cropper.model.RectCropShape
+import com.smarttoolfactory.cropper.model.RoundedCornerCropShape
 import com.smarttoolfactory.cropper.settings.*
 import kotlinx.coroutines.launch
 
@@ -65,14 +67,16 @@ fun ImageCropDemo() {
         )
     }
 
-    val handleSize: Float = LocalDensity.current.run { 20.dp.toPx() }
+    val handleSize = LocalDensity.current.run { 14.dp.toPx() }
+    val cornerSize = LocalDensity.current.run { 8.dp.toPx() }
+    val corner = CornerRadiusProperties(radius = cornerSize)
 
     var cropProperties by remember {
         mutableStateOf(
             CropDefaults.properties(
                 cropOutlineProperty = CropOutlineProperty(
-                    OutlineType.Rect,
-                    RectCropShape(0, "Rect")
+                    outlineType = OutlineType.RoundedRect,
+                    cropOutline = RoundedCornerCropShape(0, "RoundRect", cornerRadius = corner)
                 ),
                 handleSize = handleSize
             )

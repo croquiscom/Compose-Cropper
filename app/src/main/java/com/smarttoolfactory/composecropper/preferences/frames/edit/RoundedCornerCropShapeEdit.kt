@@ -33,37 +33,37 @@ internal fun RoundedCornerCropShapeEdit(
         roundedCornerCropShape.cornerRadius
     }
 
-    var topStartPercent by remember {
+    var topStart by remember {
         mutableStateOf(
-            cornerRadius.topStartPercent.toFloat()
+            cornerRadius.topStart
         )
     }
 
-    var topEndPercent by remember {
+    var topEnd by remember {
         mutableStateOf(
-            cornerRadius.topEndPercent.toFloat()
+            cornerRadius.topEnd
         )
     }
 
-    var bottomStartPercent by remember {
+    var bottomStart by remember {
         mutableStateOf(
-            cornerRadius.bottomStartPercent.toFloat()
+            cornerRadius.bottomStart
         )
     }
 
-    var bottomEndPercent by remember {
+    var bottomEnd by remember {
         mutableStateOf(
-            cornerRadius.bottomEndPercent.toFloat()
+            cornerRadius.bottomEnd
         )
     }
 
     val shape by remember {
         derivedStateOf {
             RoundedCornerShape(
-                topStartPercent = topStartPercent.toInt(),
-                topEndPercent = topEndPercent.toInt(),
-                bottomStartPercent = bottomStartPercent.toInt(),
-                bottomEndPercent = bottomEndPercent.toInt()
+                topStart = topStart,
+                topEnd = topEnd,
+                bottomStart = bottomStart,
+                bottomEnd = bottomEnd
             )
         }
     }
@@ -71,10 +71,10 @@ internal fun RoundedCornerCropShapeEdit(
     onChange(
         roundedCornerCropShape.copy(
             cornerRadius = CornerRadiusProperties(
-                topStartPercent = topStartPercent.toInt(),
-                topEndPercent = topEndPercent.toInt(),
-                bottomStartPercent = bottomStartPercent.toInt(),
-                bottomEndPercent = bottomEndPercent.toInt()
+                topStart = topStart,
+                topEnd = topEnd,
+                bottomStart = bottomStart,
+                bottomEnd = bottomEnd
             ),
             title = newTitle,
             shape = shape
@@ -105,31 +105,31 @@ internal fun RoundedCornerCropShapeEdit(
         Spacer(modifier=Modifier.height(10.dp))
 
         SliderWithValueSelection(
-            value = topStartPercent,
+            value = topStart,
             title = "Top Start",
-            text = "${(topStartPercent * 10f).roundToInt() / 10f}%",
-            onValueChange = { topStartPercent = it },
+            text = "${(topStart * 10f).roundToInt() / 10f}%",
+            onValueChange = { topStart = it },
             valueRange = 0f..100f
         )
         SliderWithValueSelection(
-            value = topEndPercent,
+            value = topEnd,
             title = "Top End",
-            text = "${(topEndPercent * 10f).roundToInt() / 10f}%",
-            onValueChange = { topEndPercent = it },
+            text = "${(topEnd * 10f).roundToInt() / 10f}%",
+            onValueChange = { topEnd = it },
             valueRange = 0f..100f
         )
         SliderWithValueSelection(
-            value = bottomStartPercent,
+            value = bottomStart,
             title = "Bottom Start",
-            text = "${(bottomStartPercent * 10f).roundToInt() / 10f}%",
-            onValueChange = { bottomStartPercent = it },
+            text = "${(bottomStart * 10f).roundToInt() / 10f}%",
+            onValueChange = { bottomStart = it },
             valueRange = 0f..100f
         )
         SliderWithValueSelection(
-            value = bottomEndPercent,
+            value = bottomEnd,
             title = "Bottom End",
-            text = "${(bottomEndPercent * 10f).roundToInt() / 10f}%",
-            onValueChange = { bottomEndPercent = it },
+            text = "${(bottomEnd * 10f).roundToInt() / 10f}%",
+            onValueChange = { bottomEnd = it },
             valueRange = 0f..100f
         )
     }

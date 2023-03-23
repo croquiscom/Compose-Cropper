@@ -98,7 +98,9 @@ class CropFrameFactory(private val defaultImages: List<ImageBitmap>) {
 
             OutlineType.RoundedRect -> {
                 RoundedRectOutlineContainer(
-                    outlines = listOf(RoundedCornerCropShape(id = 0, title = "Rounded"))
+                    outlines = listOf(
+                        RoundedCornerCropShape(id = 0, title = "Rounded")
+                    )
                 )
             }
 

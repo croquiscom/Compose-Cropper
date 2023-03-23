@@ -4,6 +4,7 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.drawscope.DrawScope
@@ -14,10 +15,7 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.LayoutDirection
-import com.smarttoolfactory.cropper.model.CropImageMask
-import com.smarttoolfactory.cropper.model.CropOutline
-import com.smarttoolfactory.cropper.model.CropPath
-import com.smarttoolfactory.cropper.model.CropShape
+import com.smarttoolfactory.cropper.model.*
 import com.smarttoolfactory.cropper.util.drawGrid
 import com.smarttoolfactory.cropper.util.drawWithLayer
 import com.smarttoolfactory.cropper.util.scaleAndTranslatePath
@@ -51,6 +49,12 @@ internal fun DrawingOverlay(
         Path()
     }
 
+    val cornerRadius = if (cropOutline is RoundedCornerCropShape) {
+        cropOutline.cornerRadius
+    } else {
+        CornerRadiusProperties(0f)
+    }
+
     when (cropOutline) {
         is CropShape -> {
 
@@ -62,6 +66,7 @@ internal fun DrawingOverlay(
                 modifier = modifier,
                 drawOverlay = drawOverlay,
                 rect = rect,
+                cornerRadius = cornerRadius,
                 drawGrid = drawGrid,
                 transparentColor = transparentColor,
                 overlayColor = overlayColor,
@@ -82,11 +87,11 @@ internal fun DrawingOverlay(
                 }
             }
 
-
             DrawingOverlayImpl(
                 modifier = modifier,
                 drawOverlay = drawOverlay,
                 rect = rect,
+                cornerRadius = cornerRadius,
                 drawGrid = drawGrid,
                 transparentColor = transparentColor,
                 overlayColor = overlayColor,
@@ -106,6 +111,7 @@ internal fun DrawingOverlay(
                 modifier = modifier,
                 drawOverlay = drawOverlay,
                 rect = rect,
+                cornerRadius = cornerRadius,
                 drawGrid = drawGrid,
                 transparentColor = transparentColor,
                 overlayColor = overlayColor,
@@ -126,6 +132,7 @@ private fun DrawingOverlayImpl(
     modifier: Modifier,
     drawOverlay: Boolean,
     rect: Rect,
+    cornerRadius: CornerRadiusProperties,
     drawGrid: Boolean,
     transparentColor: Color,
     overlayColor: Color,
@@ -141,6 +148,7 @@ private fun DrawingOverlayImpl(
         drawOverlay(
             drawOverlay,
             rect,
+            cornerRadius,
             drawGrid,
             transparentColor,
             overlayColor,
@@ -161,6 +169,7 @@ private fun DrawingOverlayImpl(
     modifier: Modifier,
     drawOverlay: Boolean,
     rect: Rect,
+    cornerRadius: CornerRadiusProperties,
     drawGrid: Boolean,
     transparentColor: Color,
     overlayColor: Color,
@@ -176,6 +185,7 @@ private fun DrawingOverlayImpl(
         drawOverlay(
             drawOverlay,
             rect,
+            cornerRadius,
             drawGrid,
             transparentColor,
             overlayColor,
@@ -196,6 +206,7 @@ private fun DrawingOverlayImpl(
     modifier: Modifier,
     drawOverlay: Boolean,
     rect: Rect,
+    cornerRadius: CornerRadiusProperties,
     drawGrid: Boolean,
     transparentColor: Color,
     overlayColor: Color,
@@ -211,6 +222,7 @@ private fun DrawingOverlayImpl(
         drawOverlay(
             drawOverlay,
             rect,
+            cornerRadius,
             drawGrid,
             transparentColor,
             overlayColor,
@@ -229,6 +241,7 @@ private fun DrawingOverlayImpl(
 private fun DrawScope.drawOverlay(
     drawOverlay: Boolean,
     rect: Rect,
+    cornerRadius: CornerRadiusProperties,
     drawGrid: Boolean,
     transparentColor: Color,
     overlayColor: Color,
@@ -260,9 +273,14 @@ private fun DrawScope.drawOverlay(
     }
 
     if (drawOverlay) {
-        drawRect(
+        drawRoundRect(
             topLeft = rect.topLeft,
             size = rect.size,
+            cornerRadius = if (cornerRadius.topStart == 0f) {
+                CornerRadius.Zero
+            } else {
+                CornerRadius(x = cornerRadius.topStart, y = cornerRadius.topStart)
+            },
             color = overlayColor,
             style = Stroke(width = strokeWidth)
         )
@@ -270,7 +288,7 @@ private fun DrawScope.drawOverlay(
         if (drawHandles) {
             pathHandles.apply {
                 reset()
-                updateHandlePath(rect, handleSize)
+                updateHandlePath(rect, handleSize, cornerRadius)
             }
 
             drawPath(
@@ -322,27 +340,108 @@ private fun DrawScope.drawCropPath(
 
 private fun Path.updateHandlePath(
     rect: Rect,
-    handleSize: Float
+    handleSize: Float,
+    cornerRadius: CornerRadiusProperties,
 ) {
     if (rect != Rect.Zero) {
         // Top left lines
-        moveTo(rect.topLeft.x, rect.topLeft.y + handleSize)
-        lineTo(rect.topLeft.x, rect.topLeft.y)
-        lineTo(rect.topLeft.x + handleSize, rect.topLeft.y)
+        val topLeftRadius = cornerRadius.topStart * 2
+        if (topLeftRadius > 0) {
+            val cornerRadiusOrigin = cornerRadius.topStart
+            moveTo(rect.topLeft.x, rect.topLeft.y + handleSize)
+            lineTo(x = rect.topLeft.x, y = rect.topLeft.y + cornerRadiusOrigin)
+            arcTo(
+                rect = Rect(
+                    left = rect.topLeft.x,
+                    top = rect.topLeft.y,
+                    right = rect.topLeft.x + topLeftRadius,
+                    bottom = rect.topLeft.y + topLeftRadius
+                ),
+                startAngleDegrees = 180.0f,
+                sweepAngleDegrees = 90.0f,
+                forceMoveTo = false
+            )
+            moveTo(rect.topLeft.x + cornerRadiusOrigin, rect.topLeft.y)
+            lineTo(x = rect.topLeft.x + handleSize, y = rect.topLeft.y)
+        } else {
+            moveTo(rect.topLeft.x, rect.topLeft.y + handleSize)
+            lineTo(rect.topLeft.x, rect.topLeft.y)
+            lineTo(rect.topLeft.x + handleSize, rect.topLeft.y)
+        }
 
         // Top right lines
-        moveTo(rect.topRight.x - handleSize, rect.topRight.y)
-        lineTo(rect.topRight.x, rect.topRight.y)
-        lineTo(rect.topRight.x, rect.topRight.y + handleSize)
+        val topRightRadius = cornerRadius.topEnd * 2
+        if (topRightRadius > 0) {
+            val cornerRadiusOrigin = cornerRadius.topEnd
+            moveTo(rect.topRight.x - handleSize, rect.topRight.y)
+            lineTo(x = rect.topRight.x - cornerRadiusOrigin, y = rect.topRight.y)
+            arcTo(
+                rect = Rect(
+                    left = rect.topRight.x - topRightRadius,
+                    top = rect.topRight.y,
+                    right = rect.topRight.x,
+                    bottom = rect.topRight.y + topRightRadius
+                ),
+                startAngleDegrees = -90.0f,
+                sweepAngleDegrees = 90.0f,
+                forceMoveTo = false
+            )
+            moveTo(rect.topRight.x, rect.topRight.y + cornerRadiusOrigin)
+            lineTo(x = rect.topRight.x, y = rect.topRight.y + handleSize)
+        } else {
+            moveTo(rect.topRight.x - handleSize, rect.topRight.y)
+            lineTo(rect.topRight.x, rect.topRight.y)
+            lineTo(rect.topRight.x, rect.topRight.y + handleSize)
+        }
 
         // Bottom right lines
-        moveTo(rect.bottomRight.x, rect.bottomRight.y - handleSize)
-        lineTo(rect.bottomRight.x, rect.bottomRight.y)
-        lineTo(rect.bottomRight.x - handleSize, rect.bottomRight.y)
+        val bottomRightRadius = cornerRadius.bottomEnd * 2
+        if (bottomRightRadius > 0) {
+            val cornerRadiusOrigin = cornerRadius.bottomEnd
+            moveTo(rect.bottomRight.x, rect.bottomRight.y - handleSize)
+            lineTo(x = rect.bottomRight.x, y = rect.bottomRight.y - cornerRadiusOrigin)
+            arcTo(
+                rect = Rect(
+                    left = rect.bottomRight.x - bottomRightRadius,
+                    top = rect.bottomRight.y - bottomRightRadius,
+                    right = rect.bottomRight.x,
+                    bottom = rect.bottomRight.y
+                ),
+                startAngleDegrees = 0.0f,
+                sweepAngleDegrees = 90.0f,
+                forceMoveTo = false
+            )
+            moveTo(rect.bottomRight.x - cornerRadiusOrigin, rect.bottomRight.y)
+            lineTo(x = rect.bottomRight.x - handleSize, y = rect.bottomRight.y)
+        } else {
+            moveTo(rect.bottomRight.x, rect.bottomRight.y - handleSize)
+            lineTo(rect.bottomRight.x, rect.bottomRight.y)
+            lineTo(rect.bottomRight.x - handleSize, rect.bottomRight.y)
+        }
 
         // Bottom left lines
-        moveTo(rect.bottomLeft.x + handleSize, rect.bottomLeft.y)
-        lineTo(rect.bottomLeft.x, rect.bottomLeft.y)
-        lineTo(rect.bottomLeft.x, rect.bottomLeft.y - handleSize)
+        val bottomStartRadius = cornerRadius.bottomStart * 2
+        if (bottomStartRadius > 0) {
+            val cornerRadiusOrigin = cornerRadius.bottomStart
+            moveTo(rect.bottomLeft.x + handleSize, rect.bottomLeft.y)
+            lineTo(x = rect.bottomLeft.x + cornerRadiusOrigin, y = rect.bottomLeft.y)
+            arcTo(
+                rect = Rect(
+                    left = rect.bottomLeft.x,
+                    top = rect.bottomLeft.y - bottomStartRadius,
+                    right = rect.bottomLeft.x + bottomStartRadius,
+                    bottom = rect.bottomLeft.y
+                ),
+                startAngleDegrees = 90.0f,
+                sweepAngleDegrees = 90.0f,
+                forceMoveTo = false
+            )
+            moveTo(rect.bottomLeft.x, rect.bottomLeft.y - cornerRadiusOrigin)
+            lineTo(x = rect.bottomLeft.x, y = rect.bottomLeft.y - handleSize)
+        } else {
+            moveTo(rect.bottomLeft.x + handleSize, rect.bottomLeft.y)
+            lineTo(rect.bottomLeft.x, rect.bottomLeft.y)
+            lineTo(rect.bottomLeft.x, rect.bottomLeft.y - handleSize)
+        }
     }
 }

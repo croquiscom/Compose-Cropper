@@ -62,10 +62,10 @@ data class RoundedCornerCropShape(
     override val title: String,
     val cornerRadius: CornerRadiusProperties = CornerRadiusProperties(),
     override val shape: RoundedCornerShape = RoundedCornerShape(
-        topStartPercent = cornerRadius.topStartPercent,
-        topEndPercent = cornerRadius.topEndPercent,
-        bottomEndPercent = cornerRadius.bottomEndPercent,
-        bottomStartPercent = cornerRadius.bottomStartPercent
+        topStart = cornerRadius.topStart,
+        topEnd = cornerRadius.topEnd,
+        bottomEnd = cornerRadius.bottomEnd,
+        bottomStart = cornerRadius.bottomStart
     )
 ) : CropShape
 
@@ -79,10 +79,10 @@ data class CutCornerCropShape(
     override val title: String,
     val cornerRadius: CornerRadiusProperties = CornerRadiusProperties(),
     override val shape: CutCornerShape = CutCornerShape(
-        topStartPercent = cornerRadius.topStartPercent,
-        topEndPercent = cornerRadius.topEndPercent,
-        bottomEndPercent = cornerRadius.bottomEndPercent,
-        bottomStartPercent = cornerRadius.bottomStartPercent
+        topStart = cornerRadius.topStart,
+        topEnd = cornerRadius.topEnd,
+        bottomEnd = cornerRadius.bottomEnd,
+        bottomStart = cornerRadius.bottomStart
     )
 ) : CropShape
 
