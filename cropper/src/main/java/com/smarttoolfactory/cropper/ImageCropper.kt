@@ -271,6 +271,7 @@ private fun ImageCropperImpl(
         val handleColor = cropStyle.handleColor
         val drawHandles = cropType == CropType.Dynamic
         val strokeWidth = cropStyle.strokeWidth
+        val handleStrokeWidth = cropStyle.handleStrokeWidth
         
         DrawingOverlay(
             modifier = Modifier.size(containerWidth, containerHeight),
@@ -281,6 +282,7 @@ private fun ImageCropperImpl(
             overlayColor = overlayColor,
             handleColor = handleColor,
             strokeWidth = strokeWidth,
+            handleStrokeWidth = handleStrokeWidth,
             drawHandles = drawHandles,
             handleSize = handleSize,
             transparentColor = transparentColor,

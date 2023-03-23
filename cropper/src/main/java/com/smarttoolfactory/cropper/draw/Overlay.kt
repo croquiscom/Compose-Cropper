@@ -37,6 +37,7 @@ internal fun DrawingOverlay(
     overlayColor: Color,
     handleColor: Color,
     strokeWidth: Dp,
+    handleStrokeWidth: Dp,
     drawHandles: Boolean,
     handleSize: Float
 ) {
@@ -44,6 +45,7 @@ internal fun DrawingOverlay(
     val layoutDirection: LayoutDirection = LocalLayoutDirection.current
 
     val strokeWidthPx = LocalDensity.current.run { strokeWidth.toPx() }
+    val handleStrokeWidthPx = LocalDensity.current.run { handleStrokeWidth.toPx() }
 
     val pathHandles = remember {
         Path()
@@ -65,6 +67,7 @@ internal fun DrawingOverlay(
                 overlayColor = overlayColor,
                 handleColor = handleColor,
                 strokeWidth = strokeWidthPx,
+                handleStrokeWidth = handleStrokeWidthPx,
                 drawHandles = drawHandles,
                 handleSize = handleSize,
                 pathHandles = pathHandles,
@@ -89,6 +92,7 @@ internal fun DrawingOverlay(
                 overlayColor = overlayColor,
                 handleColor = handleColor,
                 strokeWidth = strokeWidthPx,
+                handleStrokeWidth = handleStrokeWidthPx,
                 drawHandles = drawHandles,
                 handleSize = handleSize,
                 pathHandles = pathHandles,
@@ -107,6 +111,7 @@ internal fun DrawingOverlay(
                 overlayColor = overlayColor,
                 handleColor = handleColor,
                 strokeWidth = strokeWidthPx,
+                handleStrokeWidth = handleStrokeWidthPx,
                 drawHandles = drawHandles,
                 handleSize = handleSize,
                 pathHandles = pathHandles,
@@ -126,6 +131,7 @@ private fun DrawingOverlayImpl(
     overlayColor: Color,
     handleColor: Color,
     strokeWidth: Float,
+    handleStrokeWidth: Float,
     drawHandles: Boolean,
     handleSize: Float,
     pathHandles: Path,
@@ -140,6 +146,7 @@ private fun DrawingOverlayImpl(
             overlayColor,
             handleColor,
             strokeWidth,
+            handleStrokeWidth,
             drawHandles,
             handleSize,
             pathHandles
@@ -159,6 +166,7 @@ private fun DrawingOverlayImpl(
     overlayColor: Color,
     handleColor: Color,
     strokeWidth: Float,
+    handleStrokeWidth: Float,
     drawHandles: Boolean,
     handleSize: Float,
     pathHandles: Path,
@@ -173,6 +181,7 @@ private fun DrawingOverlayImpl(
             overlayColor,
             handleColor,
             strokeWidth,
+            handleStrokeWidth,
             drawHandles,
             handleSize,
             pathHandles
@@ -192,6 +201,7 @@ private fun DrawingOverlayImpl(
     overlayColor: Color,
     handleColor: Color,
     strokeWidth: Float,
+    handleStrokeWidth: Float,
     drawHandles: Boolean,
     handleSize: Float,
     pathHandles: Path,
@@ -206,6 +216,7 @@ private fun DrawingOverlayImpl(
             overlayColor,
             handleColor,
             strokeWidth,
+            handleStrokeWidth,
             drawHandles,
             handleSize,
             pathHandles
@@ -223,6 +234,7 @@ private fun DrawScope.drawOverlay(
     overlayColor: Color,
     handleColor: Color,
     strokeWidth: Float,
+    handleStrokeWidth: Float,
     drawHandles: Boolean,
     handleSize: Float,
     pathHandles: Path,
@@ -265,7 +277,7 @@ private fun DrawScope.drawOverlay(
                 path = pathHandles,
                 color = handleColor,
                 style = Stroke(
-                    width = strokeWidth * 2,
+                    width = handleStrokeWidth,
                     cap = StrokeCap.Round,
                     join = StrokeJoin.Round
                 )

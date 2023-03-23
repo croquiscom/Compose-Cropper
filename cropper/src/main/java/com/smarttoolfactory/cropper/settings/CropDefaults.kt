@@ -60,7 +60,8 @@ object CropDefaults {
     fun style(
         drawOverlay: Boolean = true,
         drawGrid: Boolean = true,
-        strokeWidth: Dp = 1.dp,
+        strokeWidth: Dp = (0.5).dp,
+        handleStrokeWidth: Dp = 1.dp,
         overlayColor: Color = DefaultOverlayColor,
         handleColor: Color = DefaultHandleColor,
         backgroundColor: Color = DefaultBackgroundColor
@@ -69,6 +70,7 @@ object CropDefaults {
             drawOverlay = drawOverlay,
             drawGrid = drawGrid,
             strokeWidth = strokeWidth,
+            handleStrokeWidth = handleStrokeWidth,
             overlayColor = overlayColor,
             handleColor = handleColor,
             backgroundColor = backgroundColor
@@ -105,6 +107,7 @@ data class CropStyle internal constructor(
     val drawOverlay: Boolean,
     val drawGrid: Boolean,
     val strokeWidth: Dp,
+    val handleStrokeWidth: Dp,
     val overlayColor: Color,
     val handleColor: Color,
     val backgroundColor: Color,

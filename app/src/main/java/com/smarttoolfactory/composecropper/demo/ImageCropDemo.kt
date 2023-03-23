@@ -78,7 +78,7 @@ fun ImageCropDemo() {
             )
         )
     }
-    var cropStyle by remember { mutableStateOf(CropDefaults.style()) }
+    var cropStyle by remember { mutableStateOf(CropDefaults.style().copy(handleStrokeWidth = 4.dp)) }
     val coroutineScope = rememberCoroutineScope()
 
     var selectionPage by remember { mutableStateOf(SelectionPage.Properties) }
