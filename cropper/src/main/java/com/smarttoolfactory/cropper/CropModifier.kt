@@ -10,14 +10,14 @@ import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.debugInspectorInfo
+import com.smarttoolfactory.cropper.gestures.detectMotionEventsAsList
+import com.smarttoolfactory.cropper.gestures.detectTransformGestures
 import com.smarttoolfactory.cropper.model.CropData
 import com.smarttoolfactory.cropper.state.CropState
 import com.smarttoolfactory.cropper.state.cropData
 import com.smarttoolfactory.cropper.util.ZoomLevel
 import com.smarttoolfactory.cropper.util.getNextZoomLevel
 import com.smarttoolfactory.cropper.util.update
-import com.smarttoolfactory.gesture.detectMotionEventsAsList
-import com.smarttoolfactory.gesture.detectTransformGestures
 import kotlinx.coroutines.launch
 
 /**
