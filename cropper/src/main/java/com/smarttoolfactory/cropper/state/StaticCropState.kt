@@ -1,6 +1,7 @@
 package com.smarttoolfactory.cropper.state
 
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.input.pointer.PointerInputChange
 import androidx.compose.ui.unit.IntSize
 import com.smarttoolfactory.cropper.model.AspectRatio
@@ -23,6 +24,8 @@ import kotlinx.coroutines.coroutineScope
  * empty space on sides or edges of parent
  */
 class StaticCropState internal constructor(
+    minOverlaySize: Size,
+    maxOverlaySize: Size,
     imageSize: IntSize,
     containerSize: IntSize,
     drawAreaSize: IntSize,
@@ -40,6 +43,8 @@ class StaticCropState internal constructor(
     drawAreaSize = drawAreaSize,
     aspectRatio = aspectRatio,
     overlayRatio = overlayRatio,
+    minOverlaySize = minOverlaySize,
+    maxOverlaySize = maxOverlaySize,
     maxZoom = maxZoom,
     fling = fling,
     zoomable = zoomable,

@@ -35,6 +35,8 @@ open class TransformState(
     internal val imageSize: IntSize,
     val containerSize: IntSize,
     val drawAreaSize: IntSize,
+    internal var minOverlaySize: Size,
+    internal var maxOverlaySize: Size,
     initialZoom: Float = 1f,
     initialRotation: Float = 0f,
     minZoom: Float = 1f,
