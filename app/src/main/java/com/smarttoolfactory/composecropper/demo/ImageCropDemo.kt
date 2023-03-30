@@ -20,6 +20,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.layout.ContentScale
@@ -36,7 +37,6 @@ import com.smarttoolfactory.composecropper.ui.theme.ComposeCropperTheme
 import com.smarttoolfactory.cropper.ImageCropper
 import com.smarttoolfactory.cropper.model.CornerRadiusProperties
 import com.smarttoolfactory.cropper.model.OutlineType
-import com.smarttoolfactory.cropper.model.RectCropShape
 import com.smarttoolfactory.cropper.model.RoundedCornerCropShape
 import com.smarttoolfactory.cropper.settings.*
 import kotlinx.coroutines.launch
@@ -70,7 +70,7 @@ fun ImageCropDemo() {
     val handleSize = LocalDensity.current.run { 14.dp.toPx() }
     val cornerSize = LocalDensity.current.run { 8.dp.toPx() }
     val corner = CornerRadiusProperties(radius = cornerSize)
-    val minOverlaySize = LocalDensity.current.run { 36.dp.toPx() }
+    val minOverlaySize = LocalDensity.current.run { Size(36.dp.toPx(), 36.dp.toPx()) }
 
     var cropProperties by remember {
         mutableStateOf(
@@ -90,7 +90,6 @@ fun ImageCropDemo() {
     val coroutineScope = rememberCoroutineScope()
 
     var selectionPage by remember { mutableStateOf(SelectionPage.Properties) }
-
 
     val theme by remember {
         derivedStateOf {

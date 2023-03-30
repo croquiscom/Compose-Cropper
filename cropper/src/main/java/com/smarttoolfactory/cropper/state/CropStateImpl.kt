@@ -52,6 +52,8 @@ abstract class CropState internal constructor(
     internal var fling: Boolean = true,
     internal var aspectRatio: AspectRatio,
     internal var overlayRatio: Float,
+    minOverlaySize: Size,
+    maxOverlaySize: Size,
     zoomable: Boolean = true,
     pannable: Boolean = true,
     rotatable: Boolean = false,
@@ -66,7 +68,9 @@ abstract class CropState internal constructor(
     zoomable = zoomable,
     pannable = pannable,
     rotatable = rotatable,
-    limitPan = limitPan
+    limitPan = limitPan,
+    minOverlaySize = minOverlaySize,
+    maxOverlaySize = maxOverlaySize
 ) {
 
     private val animatableRectOverlay = Animatable(
@@ -402,12 +406,21 @@ abstract class CropState internal constructor(
         aspectRatio: AspectRatio,
         coefficient: Float
     ): Rect {
-
         if (aspectRatio == AspectRatio.Unspecified) {
 
             // Maximum width and height overlay rectangle can be measured with
-            val overlayWidthMax = drawAreaWidth.coerceAtMost(containerWidth * coefficient)
-            val overlayHeightMax = drawAreaHeight.coerceAtMost(containerHeight * coefficient)
+            val maxWidth = if(maxOverlaySize == Size.Unspecified) {
+                drawAreaWidth
+            } else {
+                maxOverlaySize.width
+            }
+            val maxHeight = if(maxOverlaySize == Size.Unspecified) {
+                drawAreaHeight
+            } else {
+                maxOverlaySize.height
+            }
+            val overlayWidthMax = maxWidth.coerceAtMost(containerWidth * coefficient)
+            val overlayHeightMax = maxHeight.coerceAtMost(containerHeight * coefficient)
 
             val offsetX = (containerWidth - overlayWidthMax) / 2f
             val offsetY = (containerHeight - overlayHeightMax) / 2f
@@ -418,8 +431,8 @@ abstract class CropState internal constructor(
             )
         }
 
-        val overlayWidthMax = containerWidth * coefficient
-        val overlayHeightMax = containerHeight * coefficient
+        val overlayWidthMax = maxOverlaySize.width.coerceAtMost(containerWidth * coefficient)
+        val overlayHeightMax = maxOverlaySize.height.coerceAtMost(containerHeight * coefficient)
 
         val aspectRatioValue = aspectRatio.value
 

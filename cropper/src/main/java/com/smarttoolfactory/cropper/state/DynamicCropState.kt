@@ -32,7 +32,8 @@ import kotlinx.coroutines.coroutineScope
  */
 class DynamicCropState internal constructor(
     private var handleSize: Float,
-    private var minOverlaySize: Float,
+    minOverlaySize: Size,
+    maxOverlaySize: Size,
     imageSize: IntSize,
     containerSize: IntSize,
     drawAreaSize: IntSize,
@@ -50,6 +51,8 @@ class DynamicCropState internal constructor(
     drawAreaSize = drawAreaSize,
     aspectRatio = aspectRatio,
     overlayRatio = overlayRatio,
+    minOverlaySize = minOverlaySize,
+    maxOverlaySize = maxOverlaySize,
     maxZoom = maxZoom,
     fling = fling,
     zoomable = zoomable,
@@ -86,6 +89,7 @@ class DynamicCropState internal constructor(
     override suspend fun updateProperties(cropProperties: CropProperties, forceUpdate: Boolean) {
         handleSize = cropProperties.handleSize
         minOverlaySize = cropProperties.minOverlaySize
+        maxOverlaySize = cropProperties.maxOverlaySize
         
         super.updateProperties(cropProperties, forceUpdate)
     }
@@ -134,7 +138,8 @@ class DynamicCropState internal constructor(
             val newRect = updateOverlayRect(
                 distanceToEdgeFromTouch = distanceToEdgeFromTouch,
                 touchRegion = touchRegion,
-                minDimension = minOverlaySize,
+                minSize = minOverlaySize,
+                maxSize = maxOverlaySize,
                 rectTemp = rectTemp,
                 overlayRect = overlayRect,
                 change = change
@@ -348,7 +353,8 @@ class DynamicCropState internal constructor(
     private fun updateOverlayRect(
         distanceToEdgeFromTouch: Offset,
         touchRegion: TouchRegion,
-        minDimension: Float,
+        minSize: Size,
+        maxSize: Size,
         rectTemp: Rect,
         overlayRect: Rect,
         change: PointerInputChange
@@ -367,8 +373,16 @@ class DynamicCropState internal constructor(
 
                 // Set position of top left while moving with top left handle and
                 // limit position to not intersect other handles
-                val left = screenPositionX.coerceAtMost(rectTemp.right - minDimension)
-                val top = screenPositionY.coerceAtMost(rectTemp.bottom - minDimension)
+                val left = if(maxSize == Size.Unspecified || maxSize.width < minSize.width) {
+                    screenPositionX.coerceAtMost(rectTemp.right - minSize.width)
+                } else {
+                    screenPositionX.coerceIn(minimumValue = rectTemp.right - maxSize.width, maximumValue = rectTemp.right - minSize.width)
+                }
+                val top = if(maxSize == Size.Unspecified || maxSize.height < minSize.height) {
+                    screenPositionY.coerceAtMost(rectTemp.bottom - minSize.height)
+                } else {
+                    screenPositionY.coerceIn(minimumValue = rectTemp.bottom - maxSize.height, maximumValue =  rectTemp.bottom - minSize.height)
+                }
                 Rect(
                     left = left,
                     top = top,
@@ -381,8 +395,16 @@ class DynamicCropState internal constructor(
 
                 // Set position of top left while moving with bottom left handle and
                 // limit position to not intersect other handles
-                val left = screenPositionX.coerceAtMost(rectTemp.right - minDimension)
-                val bottom = screenPositionY.coerceAtLeast(rectTemp.top + minDimension)
+                val left = if(maxSize == Size.Unspecified || maxSize.width < minSize.width) {
+                    screenPositionX.coerceAtMost(rectTemp.right - minSize.width)
+                } else {
+                    screenPositionX.coerceIn(minimumValue = rectTemp.right - maxSize.width, maximumValue = rectTemp.right - minSize.width)
+                }
+                val bottom = if(maxSize == Size.Unspecified || maxSize.height < minSize.height) {
+                    screenPositionY.coerceAtLeast(rectTemp.top + minSize.height)
+                } else {
+                    screenPositionY.coerceIn(minimumValue = rectTemp.top + minSize.height, maximumValue = rectTemp.top + maxSize.height)
+                }
                 Rect(
                     left = left,
                     top = rectTemp.top,
@@ -395,8 +417,16 @@ class DynamicCropState internal constructor(
 
                 // Set position of top left while moving with top right handle and
                 // limit position to not intersect other handles
-                val right = screenPositionX.coerceAtLeast(rectTemp.left + minDimension)
-                val top = screenPositionY.coerceAtMost(rectTemp.bottom - minDimension)
+                val right = if(maxSize == Size.Unspecified || maxSize.width < minSize.width) {
+                    screenPositionX.coerceAtLeast(rectTemp.left + minSize.width)
+                } else {
+                    screenPositionX.coerceIn(minimumValue = rectTemp.left + minSize.width, maximumValue = rectTemp.left + maxSize.width)
+                }
+                val top = if(maxSize == Size.Unspecified || maxSize.height < minSize.height) {
+                    screenPositionY.coerceAtMost(rectTemp.bottom - minSize.height)
+                } else {
+                    screenPositionY.coerceIn(minimumValue = rectTemp.bottom - maxSize.height, maximumValue = rectTemp.bottom - minSize.height)
+                }
 
                 Rect(
                     left = rectTemp.left,
@@ -411,8 +441,16 @@ class DynamicCropState internal constructor(
 
                 // Set position of top left while moving with bottom right handle and
                 // limit position to not intersect other handles
-                val right = screenPositionX.coerceAtLeast(rectTemp.left + minDimension)
-                val bottom = screenPositionY.coerceAtLeast(rectTemp.top + minDimension)
+                val right = if(maxSize == Size.Unspecified || maxSize.width < minSize.width) {
+                    screenPositionX.coerceAtLeast(rectTemp.left + minSize.width)
+                } else {
+                    screenPositionX.coerceIn(minimumValue = rectTemp.left + minSize.width, maximumValue = rectTemp.left + maxSize.width)
+                }
+                val bottom = if(maxSize == Size.Unspecified || maxSize.height < minSize.height) {
+                    screenPositionY.coerceAtLeast(rectTemp.top + minSize.height)
+                } else {
+                    screenPositionY.coerceIn(minimumValue = rectTemp.top + minSize.height, maximumValue = rectTemp.top + maxSize.height)
+                }
 
                 Rect(
                     left = rectTemp.left,
