@@ -28,6 +28,7 @@ class StaticCropState internal constructor(
     maxOverlaySize: Size,
     imageSize: IntSize,
     containerSize: IntSize,
+    containerOffset: Offset,
     drawAreaSize: IntSize,
     aspectRatio: AspectRatio,
     overlayRatio: Float,
@@ -50,7 +51,8 @@ class StaticCropState internal constructor(
     zoomable = zoomable,
     pannable = pannable,
     rotatable = rotatable,
-    limitPan = limitPan
+    limitPan = limitPan,
+    containerOffset = containerOffset,
 ) {
 
     override suspend fun onDown(change: PointerInputChange) = Unit

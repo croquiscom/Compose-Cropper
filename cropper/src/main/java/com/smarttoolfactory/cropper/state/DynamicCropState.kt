@@ -36,6 +36,7 @@ class DynamicCropState internal constructor(
     maxOverlaySize: Size,
     imageSize: IntSize,
     containerSize: IntSize,
+    containerOffset: Offset,
     drawAreaSize: IntSize,
     aspectRatio: AspectRatio,
     overlayRatio: Float,
@@ -48,6 +49,7 @@ class DynamicCropState internal constructor(
 ) : CropState(
     imageSize = imageSize,
     containerSize = containerSize,
+    containerOffset = containerOffset,
     drawAreaSize = drawAreaSize,
     aspectRatio = aspectRatio,
     overlayRatio = overlayRatio,
@@ -152,11 +154,11 @@ class DynamicCropState internal constructor(
     override suspend fun onUp(change: PointerInputChange) = coroutineScope {
         if (touchRegion != TouchRegion.None) {
 
-            val isInContainerBounds = isRectInContainerBounds(overlayRect)
+            val isInContainerBounds = isRectInContainerBounds(overlayRect, containerOffset)
             if (!isInContainerBounds) {
 
                 // Calculate new overlay since it's out of Container bounds
-                rectTemp = calculateOverlayRectInBounds(rectBounds, overlayRect)
+                rectTemp = calculateOverlayRectInBounds(rectBounds, overlayRect, containerOffset)
 
                 // Animate overlay to new bounds inside container
                 animateOverlayRectTo(rectTemp)
@@ -313,35 +315,35 @@ class DynamicCropState internal constructor(
      * [overlayRect] might be shrunk or moved up/down/left/right to container bounds when
      * it's out of Composable region
      */
-    private fun calculateOverlayRectInBounds(rectBounds: Rect, rectCurrent: Rect): Rect {
+    private fun calculateOverlayRectInBounds(rectBounds: Rect, rectCurrent: Rect, containerOffset: Offset): Rect {
 
         var width = rectCurrent.width
         var height = rectCurrent.height
 
-        if (width > rectBounds.width) {
-            width = rectBounds.width
+        if (width > rectBounds.width - (containerOffset.x * 2)) {
+            width = rectBounds.width - (containerOffset.x * 2)
         }
 
-        if (height > rectBounds.height) {
-            height = rectBounds.height
+        if (height > rectBounds.height - (containerOffset.y * 2)) {
+            height = rectBounds.height - (containerOffset.y * 2)
         }
 
         var rect = Rect(offset = rectCurrent.topLeft, size = Size(width, height))
 
-        if (rect.left < rectBounds.left) {
-            rect = rect.translate(rectBounds.left - rect.left, 0f)
+        if (rect.left < rectBounds.left + containerOffset.x) {
+            rect = rect.translate((rectBounds.left + containerOffset.x) - rect.left, 0f)
         }
 
-        if (rect.top < rectBounds.top) {
-            rect = rect.translate(0f, rectBounds.top - rect.top)
+        if (rect.top < rectBounds.top + containerOffset.y) {
+            rect = rect.translate(0f, (rectBounds.top + containerOffset.y) - rect.top)
         }
 
-        if (rect.right > rectBounds.right) {
-            rect = rect.translate(rectBounds.right - rect.right, 0f)
+        if (rect.right > rectBounds.right - containerOffset.x) {
+            rect = rect.translate((rectBounds.right - containerOffset.x) - rect.right, 0f)
         }
 
-        if (rect.bottom > rectBounds.bottom) {
-            rect = rect.translate(0f, rectBounds.bottom - rect.bottom)
+        if (rect.bottom > rectBounds.bottom - containerOffset.y) {
+            rect = rect.translate(0f, (rectBounds.bottom - containerOffset.y) - rect.bottom)
         }
 
         return rect

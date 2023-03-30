@@ -47,6 +47,7 @@ val CropState.cropData: CropData
 abstract class CropState internal constructor(
     imageSize: IntSize,
     containerSize: IntSize,
+    internal val containerOffset: Offset,
     drawAreaSize: IntSize,
     maxZoom: Float,
     internal var fling: Boolean = true,
@@ -239,11 +240,11 @@ abstract class CropState internal constructor(
     /**
      * Check if [rect] is inside container bounds
      */
-    internal fun isRectInContainerBounds(rect: Rect): Boolean {
-        return rect.left >= 0 &&
-                rect.right <= containerSize.width &&
-                rect.top >= 0 &&
-                rect.bottom <= containerSize.height
+    internal fun isRectInContainerBounds(rect: Rect, containerOffset: Offset): Boolean {
+        return rect.left >= (0 + containerOffset.x) &&
+                rect.right <= (containerSize.width - containerOffset.x) &&
+                rect.top >= (0 + containerOffset.y) &&
+                rect.bottom <= (containerSize.height - containerOffset.y)
     }
 
     /**
@@ -374,22 +375,23 @@ abstract class CropState internal constructor(
             height = rectOverlay.height
         }
 
-        var rectImageArea = Rect(offset = rectDrawArea.topLeft, size = Size(width, height))
+        val test = 100f
+        var rectImageArea = Rect(offset = rectDrawArea.topLeft + Offset(test, test), size = Size(width - (test * 2), height - (test * 2)))
 
         if (rectImageArea.left > rectOverlay.left) {
-            rectImageArea = rectImageArea.translate(rectOverlay.left - rectImageArea.left, 0f)
+            rectImageArea = rectImageArea.translate(rectOverlay.left - rectImageArea.left - test, 0f)
         }
 
         if (rectImageArea.right < rectOverlay.right) {
-            rectImageArea = rectImageArea.translate(rectOverlay.right - rectImageArea.right, 0f)
+            rectImageArea = rectImageArea.translate(rectOverlay.right - rectImageArea.right - test, 0f)
         }
 
         if (rectImageArea.top > rectOverlay.top) {
-            rectImageArea = rectImageArea.translate(0f, rectOverlay.top - rectImageArea.top)
+            rectImageArea = rectImageArea.translate(0f, rectOverlay.top - rectImageArea.top - test)
         }
 
         if (rectImageArea.bottom < rectOverlay.bottom) {
-            rectImageArea = rectImageArea.translate(0f, rectOverlay.bottom - rectImageArea.bottom)
+            rectImageArea = rectImageArea.translate(0f, rectOverlay.bottom - rectImageArea.bottom - test)
         }
 
         return rectImageArea
