@@ -70,6 +70,7 @@ fun ImageCropDemo() {
     val handleSize = LocalDensity.current.run { 14.dp.toPx() }
     val cornerSize = LocalDensity.current.run { 8.dp.toPx() }
     val corner = CornerRadiusProperties(radius = cornerSize)
+    val minOverlaySize = LocalDensity.current.run { 36.dp.toPx() }
 
     var cropProperties by remember {
         mutableStateOf(
@@ -78,7 +79,10 @@ fun ImageCropDemo() {
                     outlineType = OutlineType.RoundedRect,
                     cropOutline = RoundedCornerCropShape(0, "RoundRect", cornerRadius = corner)
                 ),
-                handleSize = handleSize
+                handleSize = handleSize,
+                pannable = false,
+                zoomable = false,
+                minOverlaySize = minOverlaySize,
             )
         )
     }

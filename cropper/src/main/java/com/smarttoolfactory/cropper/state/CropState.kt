@@ -29,7 +29,7 @@ fun rememberCropState(
 
     // Properties of crop state
     val handleSize = cropProperties.handleSize
-    val minOverlaySize = handleSize * 2
+    val minOverlaySize = cropProperties.minOverlaySize
     val cropType = cropProperties.cropType
     val aspectRatio = cropProperties.aspectRatio
     val overlayRatio = cropProperties.overlayRatio

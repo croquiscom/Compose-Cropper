@@ -36,7 +36,8 @@ object CropDefaults {
         pannable: Boolean = true,
         fling: Boolean = false,
         zoomable: Boolean = true,
-        rotatable: Boolean = false
+        rotatable: Boolean = false,
+        minOverlaySize: Float = handleSize * 2,
     ): CropProperties {
         return CropProperties(
             cropType = cropType,
@@ -49,7 +50,8 @@ object CropDefaults {
             pannable = pannable,
             fling = fling,
             zoomable = zoomable,
-            rotatable = rotatable
+            rotatable = rotatable,
+            minOverlaySize = minOverlaySize,
         )
     }
 
@@ -96,6 +98,7 @@ data class CropProperties internal constructor(
     val rotatable: Boolean,
     val zoomable: Boolean,
     val maxZoom: Float,
+    val minOverlaySize: Float,
 )
 
 /**

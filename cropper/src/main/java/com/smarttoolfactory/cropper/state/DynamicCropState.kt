@@ -85,7 +85,7 @@ class DynamicCropState internal constructor(
 
     override suspend fun updateProperties(cropProperties: CropProperties, forceUpdate: Boolean) {
         handleSize = cropProperties.handleSize
-        minOverlaySize = handleSize * 2
+        minOverlaySize = cropProperties.minOverlaySize
         
         super.updateProperties(cropProperties, forceUpdate)
     }
