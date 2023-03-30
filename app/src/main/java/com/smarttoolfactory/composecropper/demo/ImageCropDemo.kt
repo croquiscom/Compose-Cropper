@@ -20,6 +20,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.layout.ContentScale
@@ -40,6 +41,7 @@ import com.smarttoolfactory.cropper.model.RectCropShape
 import com.smarttoolfactory.cropper.model.RoundedCornerCropShape
 import com.smarttoolfactory.cropper.settings.*
 import kotlinx.coroutines.launch
+import java.lang.Integer.min
 
 internal enum class SelectionPage {
     Properties, Style
@@ -70,7 +72,8 @@ fun ImageCropDemo() {
     val handleSize = LocalDensity.current.run { 14.dp.toPx() }
     val cornerSize = LocalDensity.current.run { 8.dp.toPx() }
     val corner = CornerRadiusProperties(radius = cornerSize)
-    val minOverlaySize = LocalDensity.current.run { 36.dp.toPx() }
+    val minOverlaySize = LocalDensity.current.run { Size(36.dp.toPx(), 36.dp.toPx()) }
+    val maxOverlaySize = LocalDensity.current.run { Size(200.dp.toPx(), 100.dp.toPx()) }
 
     var cropProperties by remember {
         mutableStateOf(
@@ -83,6 +86,7 @@ fun ImageCropDemo() {
                 pannable = false,
                 zoomable = false,
                 minOverlaySize = minOverlaySize,
+                maxOverlaySize = maxOverlaySize,
             )
         )
     }
@@ -90,7 +94,6 @@ fun ImageCropDemo() {
     val coroutineScope = rememberCoroutineScope()
 
     var selectionPage by remember { mutableStateOf(SelectionPage.Properties) }
-
 
     val theme by remember {
         derivedStateOf {
