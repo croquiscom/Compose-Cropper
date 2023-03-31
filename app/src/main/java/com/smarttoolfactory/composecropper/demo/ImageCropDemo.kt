@@ -21,6 +21,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
@@ -72,7 +73,8 @@ fun ImageCropDemo() {
     val cornerSize = LocalDensity.current.run { 8.dp.toPx() }
     val corner = CornerRadiusProperties(radius = cornerSize)
     val minOverlaySize = LocalDensity.current.run { Size(36.dp.toPx(), 36.dp.toPx()) }
-    val containerOffset = LocalDensity.current.run { Offset(50.dp.toPx(), 50.dp.toPx()) }
+    val containerOffset = LocalDensity.current.run { Offset(20.dp.toPx(), 20.dp.toPx()) }
+    val overlayRect = LocalDensity.current.run { Rect(Offset(125.dp.toPx(), 400.dp.toPx()), Size(100.dp.toPx(), 100.dp.toPx())) }
 
     var cropProperties by remember {
         mutableStateOf(
@@ -86,6 +88,7 @@ fun ImageCropDemo() {
                 zoomable = false,
                 minOverlaySize = minOverlaySize,
                 containerOffset = containerOffset,
+                overlayRect = overlayRect,
             )
         )
     }

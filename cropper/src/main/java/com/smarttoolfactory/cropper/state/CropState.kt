@@ -40,6 +40,7 @@ fun rememberCropState(
     val pannable = cropProperties.pannable
     val rotatable = cropProperties.rotatable
     val containerOffset = cropProperties.containerOffset
+    val overlayRect = cropProperties.overlayRect
 
     return remember(*keys) {
         when (cropType) {
@@ -59,6 +60,7 @@ fun rememberCropState(
                     minOverlaySize = minOverlaySize,
                     maxOverlaySize = maxOverlaySize,
                     containerOffset = containerOffset,
+                    initialOverlayRect = overlayRect
                 )
             }
             else -> {
@@ -79,6 +81,7 @@ fun rememberCropState(
                     minOverlaySize = minOverlaySize,
                     maxOverlaySize = maxOverlaySize,
                     containerOffset = containerOffset,
+                    initialOverlayRect = overlayRect
                 )
             }
         }

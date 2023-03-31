@@ -40,6 +40,7 @@ class DynamicCropState internal constructor(
     drawAreaSize: IntSize,
     aspectRatio: AspectRatio,
     overlayRatio: Float,
+    initialOverlayRect: Rect?,
     maxZoom: Float,
     fling: Boolean,
     zoomable: Boolean,
@@ -60,7 +61,8 @@ class DynamicCropState internal constructor(
     zoomable = zoomable,
     pannable = pannable,
     rotatable = rotatable,
-    limitPan = limitPan
+    limitPan = limitPan,
+    initialOverlayRect = initialOverlayRect,
 ) {
 
     /**
@@ -261,6 +263,7 @@ class DynamicCropState internal constructor(
                     containerSize.height.toFloat(),
                     drawAreaSize.width.toFloat(),
                     drawAreaSize.height.toFloat(),
+                    initialOverlayRect,
                     aspectRatio,
                     overlayRatio
                 )

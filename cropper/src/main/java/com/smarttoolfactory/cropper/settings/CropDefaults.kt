@@ -3,6 +3,7 @@ package com.smarttoolfactory.cropper.settings
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -41,7 +42,8 @@ object CropDefaults {
         rotatable: Boolean = false,
         minOverlaySize: Size = Size(handleSize * 2, handleSize * 2),
         maxOverlaySize: Size = Size.Unspecified,
-        containerOffset: Offset = Offset.Zero
+        containerOffset: Offset = Offset.Zero,
+        overlayRect: Rect? = null
     ): CropProperties {
         return CropProperties(
             cropType = cropType,
@@ -58,6 +60,7 @@ object CropDefaults {
             minOverlaySize = minOverlaySize,
             maxOverlaySize = maxOverlaySize,
             containerOffset = containerOffset,
+            overlayRect = overlayRect,
         )
     }
 
@@ -107,6 +110,7 @@ data class CropProperties internal constructor(
     val minOverlaySize: Size,
     val maxOverlaySize: Size,
     val containerOffset: Offset,
+    val overlayRect: Rect?,
 )
 
 /**

@@ -53,6 +53,7 @@ abstract class CropState internal constructor(
     internal var fling: Boolean = true,
     internal var aspectRatio: AspectRatio,
     internal var overlayRatio: Float,
+    internal var initialOverlayRect: Rect?,
     minOverlaySize: Size,
     maxOverlaySize: Size,
     zoomable: Boolean = true,
@@ -80,8 +81,9 @@ abstract class CropState internal constructor(
             containerSize.height.toFloat(),
             drawAreaSize.width.toFloat(),
             drawAreaSize.height.toFloat(),
+            initialOverlayRect,
             aspectRatio,
-            overlayRatio
+            overlayRatio,
         ),
         Rect.VectorConverter
     )
@@ -127,6 +129,7 @@ abstract class CropState internal constructor(
         pannable = cropProperties.pannable
         zoomable = cropProperties.zoomable
         rotatable = cropProperties.rotatable
+        initialOverlayRect = cropProperties.overlayRect
 
         val maxZoom = cropProperties.maxZoom
 
@@ -164,6 +167,7 @@ abstract class CropState internal constructor(
                     containerSize.height.toFloat(),
                     drawAreaSize.width.toFloat(),
                     drawAreaSize.height.toFloat(),
+                    initialOverlayRect,
                     aspectRatio,
                     overlayRatio
                 )
@@ -405,6 +409,7 @@ abstract class CropState internal constructor(
         containerHeight: Float,
         drawAreaWidth: Float,
         drawAreaHeight: Float,
+        initialOverlayRect: Rect?,
         aspectRatio: AspectRatio,
         coefficient: Float
     ): Rect {
@@ -421,11 +426,11 @@ abstract class CropState internal constructor(
             } else {
                 maxOverlaySize.height
             }
-            val overlayWidthMax = maxWidth.coerceAtMost(containerWidth * coefficient)
-            val overlayHeightMax = maxHeight.coerceAtMost(containerHeight * coefficient)
+            val overlayWidthMax = initialOverlayRect?.width ?: maxWidth.coerceAtMost(containerWidth * coefficient)
+            val overlayHeightMax = initialOverlayRect?.height ?: maxHeight.coerceAtMost(containerHeight * coefficient)
 
-            val offsetX = (containerWidth - overlayWidthMax) / 2f
-            val offsetY = (containerHeight - overlayHeightMax) / 2f
+            val offsetX = initialOverlayRect?.topLeft?.x ?: ((containerWidth - overlayWidthMax) / 2f)
+            val offsetY = initialOverlayRect?.topLeft?.y ?: ((containerHeight - overlayHeightMax) / 2f)
 
             return Rect(
                 offset = Offset(offsetX, offsetY),
@@ -433,8 +438,8 @@ abstract class CropState internal constructor(
             )
         }
 
-        val overlayWidthMax = maxOverlaySize.width.coerceAtMost(containerWidth * coefficient)
-        val overlayHeightMax = maxOverlaySize.height.coerceAtMost(containerHeight * coefficient)
+        val overlayWidthMax = initialOverlayRect?.width ?: maxOverlaySize.width.coerceAtMost(containerWidth * coefficient)
+        val overlayHeightMax = initialOverlayRect?.height ?: maxOverlaySize.height.coerceAtMost(containerHeight * coefficient)
 
         val aspectRatioValue = aspectRatio.value
 
@@ -446,8 +451,8 @@ abstract class CropState internal constructor(
             width = height * aspectRatioValue
         }
 
-        val offsetX = (containerWidth - width) / 2f
-        val offsetY = (containerHeight - height) / 2f
+        val offsetX = initialOverlayRect?.topLeft?.x ?: ((containerWidth - width) / 2f)
+        val offsetY = initialOverlayRect?.topLeft?.y ?: ((containerHeight - height) / 2f)
 
         return Rect(offset = Offset(offsetX, offsetY), size = Size(width, height))
     }

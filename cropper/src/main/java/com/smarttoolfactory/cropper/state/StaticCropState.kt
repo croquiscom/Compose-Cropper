@@ -1,6 +1,7 @@
 package com.smarttoolfactory.cropper.state
 
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.input.pointer.PointerInputChange
 import androidx.compose.ui.unit.IntSize
@@ -32,6 +33,7 @@ class StaticCropState internal constructor(
     drawAreaSize: IntSize,
     aspectRatio: AspectRatio,
     overlayRatio: Float,
+    initialOverlayRect: Rect?,
     maxZoom: Float = 5f,
     fling: Boolean = false,
     zoomable: Boolean = true,
@@ -53,6 +55,7 @@ class StaticCropState internal constructor(
     rotatable = rotatable,
     limitPan = limitPan,
     containerOffset = containerOffset,
+    initialOverlayRect = initialOverlayRect,
 ) {
 
     override suspend fun onDown(change: PointerInputChange) = Unit
