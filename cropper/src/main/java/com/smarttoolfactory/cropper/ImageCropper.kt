@@ -29,6 +29,7 @@ import com.smarttoolfactory.cropper.draw.DrawingOverlay
 import com.smarttoolfactory.cropper.draw.ImageDrawCanvas
 import com.smarttoolfactory.cropper.image.ImageWithConstraints
 import com.smarttoolfactory.cropper.image.getScaledImageBitmap
+import com.smarttoolfactory.cropper.model.CropData
 import com.smarttoolfactory.cropper.model.CropOutline
 import com.smarttoolfactory.cropper.settings.CropDefaults
 import com.smarttoolfactory.cropper.settings.CropProperties
@@ -49,6 +50,7 @@ fun ImageCropper(
     cropProperties: CropProperties,
     filterQuality: FilterQuality = DrawScope.DefaultFilterQuality,
     crop: Boolean = false,
+    onUp: ((CropData) -> Unit)? = null,
     onCropStart: () -> Unit,
     onCropSuccess: (ImageBitmap) -> Unit
 ) {
@@ -142,7 +144,8 @@ fun ImageCropper(
             .size(containerWidth, containerHeight)
             .crop(
                 keys = resetKeys,
-                cropState = cropState
+                cropState = cropState,
+                onUp = onUp
             )
 
         LaunchedEffect(key1 = cropProperties) {

@@ -202,6 +202,9 @@ private fun MainContent(
                 crop = crop,
                 onCropStart = {
                     isCropping = true
+                },
+                onUp = {
+                    crop = true
                 }
             ) {
                 croppedImage = it
