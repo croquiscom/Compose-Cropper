@@ -432,10 +432,11 @@ abstract class CropState internal constructor(
             val offsetX = initialOverlayRect?.topLeft?.x ?: ((containerWidth - overlayWidthMax) / 2f)
             val offsetY = initialOverlayRect?.topLeft?.y ?: ((containerHeight - overlayHeightMax) / 2f)
 
-            return Rect(
+            val result = Rect(
                 offset = Offset(offsetX, offsetY),
                 size = Size(overlayWidthMax, overlayHeightMax)
             )
+            return checkAvailRect(rect = result)
         }
 
         val overlayWidthMax = initialOverlayRect?.width ?: maxOverlaySize.width.coerceAtMost(containerWidth * coefficient)
@@ -454,7 +455,12 @@ abstract class CropState internal constructor(
         val offsetX = initialOverlayRect?.topLeft?.x ?: ((containerWidth - width) / 2f)
         val offsetY = initialOverlayRect?.topLeft?.y ?: ((containerHeight - height) / 2f)
 
-        return Rect(offset = Offset(offsetX, offsetY), size = Size(width, height))
+        val result = Rect(offset = Offset(offsetX, offsetY), size = Size(width, height))
+        return checkAvailRect(rect = result)
+    }
+
+    open fun checkAvailRect(checkAvailRect: Rect? = null, rect: Rect): Rect {
+        return rect
     }
 
     /**
