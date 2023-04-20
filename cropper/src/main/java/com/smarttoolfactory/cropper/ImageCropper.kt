@@ -98,12 +98,14 @@ fun ImageCropper(
             imageHeightPx = imageHeight.roundToPx()
             containerWidth = containerWidthPx.toDp()
             containerHeight = containerHeightPx.toDp()
-            overlayRectPx = cropProperties.overlayRect?.run {
-                Rect(
-                    Offset(topLeft.x.dp.roundToPx().toFloat(), topLeft.y.dp.roundToPx().toFloat()),
-                    Offset(bottomRight.x.dp.roundToPx().toFloat(), bottomRight.y.dp.roundToPx().toFloat())
-                )
-            }
+        }
+
+        val scale = imageWidthPx.toFloat() / bitmapWidth
+        overlayRectPx = cropProperties.overlayRect?.run {
+            Rect(
+                Offset(topLeft.x.times(scale), topLeft.y.times(scale)),
+                Offset(bottomRight.x.times(scale), bottomRight.y.times(scale))
+            )
         }
 
         val cropType = cropProperties.cropType
