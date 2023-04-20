@@ -14,6 +14,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.FilterQuality
@@ -24,6 +25,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntSize
+import androidx.compose.ui.unit.dp
 import com.smarttoolfactory.cropper.crop.CropAgent
 import com.smarttoolfactory.cropper.draw.DrawingOverlay
 import com.smarttoolfactory.cropper.draw.ImageDrawCanvas
@@ -89,11 +91,19 @@ fun ImageCropper(
         val imageWidthPx: Int
         val imageHeightPx: Int
 
+        val overlayRectPx: Rect?
+
         with(LocalDensity.current) {
             imageWidthPx = imageWidth.roundToPx()
             imageHeightPx = imageHeight.roundToPx()
             containerWidth = containerWidthPx.toDp()
             containerHeight = containerHeightPx.toDp()
+            overlayRectPx = cropProperties.overlayRect?.run {
+                Rect(
+                    Offset(topLeft.x.dp.roundToPx().toFloat(), topLeft.y.dp.roundToPx().toFloat()),
+                    Offset(bottomRight.x.dp.roundToPx().toFloat(), bottomRight.y.dp.roundToPx().toFloat())
+                )
+            }
         }
 
         val cropType = cropProperties.cropType
@@ -110,7 +120,7 @@ fun ImageCropper(
             imageSize = IntSize(bitmapWidth, bitmapHeight),
             containerSize = IntSize(containerWidthPx, containerHeightPx),
             drawAreaSize = IntSize(imageWidthPx, imageHeightPx),
-            cropProperties = cropProperties,
+            cropProperties = cropProperties.copy(overlayRect = overlayRectPx),
             keys = resetKeys
         )
 
