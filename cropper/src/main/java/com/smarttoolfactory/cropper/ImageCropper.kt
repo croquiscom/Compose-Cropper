@@ -157,7 +157,15 @@ fun ImageCropper(
             .crop(
                 keys = resetKeys,
                 cropState = cropState,
-                onUp = onUp
+                onUp = {
+                    val scaledOverlayRect = it.overlayRect.run {
+                        Rect(
+                            Offset(x = topLeft.x.div(scale), y = topLeft.y.div(scale)),
+                            Offset(x = bottomRight.x.div(scale), y = bottomRight.y.div(scale)),
+                        )
+                    }
+                    onUp?.invoke(it.copy(overlayRect = scaledOverlayRect))
+                }
             )
 
         LaunchedEffect(key1 = cropProperties) {
