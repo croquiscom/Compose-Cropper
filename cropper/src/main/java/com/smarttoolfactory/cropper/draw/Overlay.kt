@@ -288,7 +288,7 @@ private fun DrawScope.drawOverlay(
         if (drawHandles) {
             pathHandles.apply {
                 reset()
-                updateHandlePath(rect, handleSize, cornerRadius)
+                updateHandlePath(rect, handleSize, handleStrokeWidth, cornerRadius)
             }
 
             drawPath(
@@ -296,8 +296,8 @@ private fun DrawScope.drawOverlay(
                 color = handleColor,
                 style = Stroke(
                     width = handleStrokeWidth,
-                    cap = StrokeCap.Round,
-                    join = StrokeJoin.Round
+//                    cap = StrokeCap.Round,
+//                    join = StrokeJoin.Round
                 )
             )
         }
@@ -341,28 +341,31 @@ private fun DrawScope.drawCropPath(
 private fun Path.updateHandlePath(
     rect: Rect,
     handleSize: Float,
+    handleStrokeWidth: Float,
     cornerRadius: CornerRadiusProperties,
 ) {
     if (rect != Rect.Zero) {
+        val thick = handleStrokeWidth / 2
+
         // Top left lines
         val topLeftRadius = cornerRadius.topStart * 2
         if (topLeftRadius > 0) {
             val cornerRadiusOrigin = cornerRadius.topStart
-            moveTo(rect.topLeft.x, rect.topLeft.y + handleSize)
-            lineTo(x = rect.topLeft.x, y = rect.topLeft.y + cornerRadiusOrigin)
+            moveTo(rect.topLeft.x + thick, rect.topLeft.y + thick + handleSize)
+            lineTo(x = rect.topLeft.x + thick, y = rect.topLeft.y + thick + cornerRadiusOrigin)
             arcTo(
                 rect = Rect(
-                    left = rect.topLeft.x,
-                    top = rect.topLeft.y,
-                    right = rect.topLeft.x + topLeftRadius,
-                    bottom = rect.topLeft.y + topLeftRadius
+                    left = rect.topLeft.x + thick,
+                    top = rect.topLeft.y + thick,
+                    right = rect.topLeft.x - thick + topLeftRadius,
+                    bottom = rect.topLeft.y - thick + topLeftRadius
                 ),
                 startAngleDegrees = 180.0f,
                 sweepAngleDegrees = 90.0f,
                 forceMoveTo = false
             )
-            moveTo(rect.topLeft.x + cornerRadiusOrigin, rect.topLeft.y)
-            lineTo(x = rect.topLeft.x + handleSize, y = rect.topLeft.y)
+            moveTo(rect.topLeft.x + cornerRadiusOrigin, rect.topLeft.y + thick)
+            lineTo(x = rect.topLeft.x + thick + handleSize, y = rect.topLeft.y + thick)
         } else {
             moveTo(rect.topLeft.x, rect.topLeft.y + handleSize)
             lineTo(rect.topLeft.x, rect.topLeft.y)
@@ -373,21 +376,21 @@ private fun Path.updateHandlePath(
         val topRightRadius = cornerRadius.topEnd * 2
         if (topRightRadius > 0) {
             val cornerRadiusOrigin = cornerRadius.topEnd
-            moveTo(rect.topRight.x - handleSize, rect.topRight.y)
-            lineTo(x = rect.topRight.x - cornerRadiusOrigin, y = rect.topRight.y)
+            moveTo(rect.topRight.x - thick - handleSize, rect.topRight.y + thick)
+            lineTo(x = rect.topRight.x - thick - cornerRadiusOrigin, y = rect.topRight.y + thick)
             arcTo(
                 rect = Rect(
-                    left = rect.topRight.x - topRightRadius,
-                    top = rect.topRight.y,
-                    right = rect.topRight.x,
-                    bottom = rect.topRight.y + topRightRadius
+                    left = rect.topRight.x + thick - topRightRadius,
+                    top = rect.topRight.y + thick,
+                    right = rect.topRight.x - thick,
+                    bottom = rect.topRight.y - thick + topRightRadius
                 ),
                 startAngleDegrees = -90.0f,
                 sweepAngleDegrees = 90.0f,
                 forceMoveTo = false
             )
-            moveTo(rect.topRight.x, rect.topRight.y + cornerRadiusOrigin)
-            lineTo(x = rect.topRight.x, y = rect.topRight.y + handleSize)
+            moveTo(rect.topRight.x - thick, rect.topRight.y + cornerRadiusOrigin)
+            lineTo(x = rect.topRight.x - thick, y = rect.topRight.y + thick + handleSize)
         } else {
             moveTo(rect.topRight.x - handleSize, rect.topRight.y)
             lineTo(rect.topRight.x, rect.topRight.y)
@@ -398,21 +401,21 @@ private fun Path.updateHandlePath(
         val bottomRightRadius = cornerRadius.bottomEnd * 2
         if (bottomRightRadius > 0) {
             val cornerRadiusOrigin = cornerRadius.bottomEnd
-            moveTo(rect.bottomRight.x, rect.bottomRight.y - handleSize)
-            lineTo(x = rect.bottomRight.x, y = rect.bottomRight.y - cornerRadiusOrigin)
+            moveTo(rect.bottomRight.x - thick, rect.bottomRight.y - thick - handleSize)
+            lineTo(x = rect.bottomRight.x - thick, y = rect.bottomRight.y - thick - cornerRadiusOrigin)
             arcTo(
                 rect = Rect(
-                    left = rect.bottomRight.x - bottomRightRadius,
-                    top = rect.bottomRight.y - bottomRightRadius,
-                    right = rect.bottomRight.x,
-                    bottom = rect.bottomRight.y
+                    left = rect.bottomRight.x + thick - bottomRightRadius,
+                    top = rect.bottomRight.y + thick - bottomRightRadius,
+                    right = rect.bottomRight.x - thick,
+                    bottom = rect.bottomRight.y - thick
                 ),
                 startAngleDegrees = 0.0f,
                 sweepAngleDegrees = 90.0f,
                 forceMoveTo = false
             )
-            moveTo(rect.bottomRight.x - cornerRadiusOrigin, rect.bottomRight.y)
-            lineTo(x = rect.bottomRight.x - handleSize, y = rect.bottomRight.y)
+            moveTo(rect.bottomRight.x - cornerRadiusOrigin, rect.bottomRight.y - thick)
+            lineTo(x = rect.bottomRight.x - thick - handleSize, y = rect.bottomRight.y - thick)
         } else {
             moveTo(rect.bottomRight.x, rect.bottomRight.y - handleSize)
             lineTo(rect.bottomRight.x, rect.bottomRight.y)
@@ -423,21 +426,21 @@ private fun Path.updateHandlePath(
         val bottomStartRadius = cornerRadius.bottomStart * 2
         if (bottomStartRadius > 0) {
             val cornerRadiusOrigin = cornerRadius.bottomStart
-            moveTo(rect.bottomLeft.x + handleSize, rect.bottomLeft.y)
-            lineTo(x = rect.bottomLeft.x + cornerRadiusOrigin, y = rect.bottomLeft.y)
+            moveTo(rect.bottomLeft.x + thick + handleSize, rect.bottomLeft.y - thick)
+            lineTo(x = rect.bottomLeft.x + thick + cornerRadiusOrigin, y = rect.bottomLeft.y - thick)
             arcTo(
                 rect = Rect(
-                    left = rect.bottomLeft.x,
-                    top = rect.bottomLeft.y - bottomStartRadius,
-                    right = rect.bottomLeft.x + bottomStartRadius,
-                    bottom = rect.bottomLeft.y
+                    left = rect.bottomLeft.x + thick,
+                    top = rect.bottomLeft.y + thick - bottomStartRadius,
+                    right = rect.bottomLeft.x - thick + bottomStartRadius,
+                    bottom = rect.bottomLeft.y - thick
                 ),
                 startAngleDegrees = 90.0f,
                 sweepAngleDegrees = 90.0f,
                 forceMoveTo = false
             )
-            moveTo(rect.bottomLeft.x, rect.bottomLeft.y - cornerRadiusOrigin)
-            lineTo(x = rect.bottomLeft.x, y = rect.bottomLeft.y - handleSize)
+            moveTo(rect.bottomLeft.x + thick, rect.bottomLeft.y - cornerRadiusOrigin)
+            lineTo(x = rect.bottomLeft.x + thick, y = rect.bottomLeft.y - thick - handleSize)
         } else {
             moveTo(rect.bottomLeft.x + handleSize, rect.bottomLeft.y)
             lineTo(rect.bottomLeft.x, rect.bottomLeft.y)
