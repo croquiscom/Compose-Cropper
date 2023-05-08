@@ -52,7 +52,8 @@ fun ImageCropper(
     cropProperties: CropProperties,
     filterQuality: FilterQuality = DrawScope.DefaultFilterQuality,
     crop: Boolean = false,
-    onUp: ((CropData) -> Unit)? = null,
+    onStartChangeArea: (() -> Unit)? = null,
+    onCompleteChangeArea: ((CropData) -> Unit)? = null,
     onCropStart: () -> Unit,
     onCropSuccess: (ImageBitmap) -> Unit
 ) {
@@ -157,6 +158,21 @@ fun ImageCropper(
             .crop(
                 keys = resetKeys,
                 cropState = cropState,
+                onDown = {
+                    onStartChangeArea?.invoke()
+                },
+                onGestureStart = {
+                    onStartChangeArea?.invoke()
+                },
+                onGestureEnd = {
+                    val scaledOverlayRect = it.overlayRect.run {
+                        Rect(
+                            Offset(x = topLeft.x.div(scale), y = topLeft.y.div(scale)),
+                            Offset(x = bottomRight.x.div(scale), y = bottomRight.y.div(scale)),
+                        )
+                    }
+                    onCompleteChangeArea?.invoke(it.copy(overlayRect = scaledOverlayRect))
+                },
                 onUp = {
                     val scaledOverlayRect = it.overlayRect.run {
                         Rect(
@@ -164,7 +180,7 @@ fun ImageCropper(
                             Offset(x = bottomRight.x.div(scale), y = bottomRight.y.div(scale)),
                         )
                     }
-                    onUp?.invoke(it.copy(overlayRect = scaledOverlayRect))
+                    onCompleteChangeArea?.invoke(it.copy(overlayRect = scaledOverlayRect))
                 }
             )
 

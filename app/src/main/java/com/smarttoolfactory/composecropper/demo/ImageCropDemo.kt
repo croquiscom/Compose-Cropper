@@ -203,7 +203,7 @@ private fun MainContent(
                 onCropStart = {
                     isCropping = true
                 },
-                onUp = {
+                onCompleteChangeArea = {
                     crop = true
                 }
             ) {
