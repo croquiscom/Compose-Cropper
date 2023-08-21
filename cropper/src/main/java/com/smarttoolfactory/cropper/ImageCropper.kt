@@ -117,7 +117,7 @@ fun ImageCropper(
         // these keys are for resetting cropper when image width/height, contentScale or
         // overlay aspect ratio changes
         val resetKeys =
-            getResetKeys(scaledImageBitmap, imageWidthPx, imageHeightPx, contentScale, cropType)
+            getResetKeys(scaledImageBitmap, imageWidthPx, imageHeightPx, contentScale, cropType, overlayRectPx)
 
         val cropState = rememberCropState(
             imageSize = IntSize(bitmapWidth, bitmapHeight),
@@ -378,19 +378,22 @@ private fun getResetKeys(
     imageWidthPx: Int,
     imageHeightPx: Int,
     contentScale: ContentScale,
-    cropType: CropType
+    cropType: CropType,
+    overlayRect: Rect?,
 ) = remember(
     scaledImageBitmap,
     imageWidthPx,
     imageHeightPx,
     contentScale,
-    cropType
+    cropType,
+    overlayRect,
 ) {
     arrayOf(
         scaledImageBitmap,
         imageWidthPx,
         imageHeightPx,
         contentScale,
-        cropType
+        cropType,
+        overlayRect,
     )
 }
